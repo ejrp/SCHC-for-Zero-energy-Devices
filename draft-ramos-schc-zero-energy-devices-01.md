@@ -48,7 +48,7 @@ informative:
 
 --- abstract
 
-This document describes the use of SCHC for very constraint devices with energy harvesting capabilities. The use of SCHC will facilitate connectivity to devices with restrained use of battery and long delays.
+This document describes the use of SCHC for very constraint devices. The use of SCHC will bring connectivity to devices with restrained use of battery and long delays.
 
 --- middle
 
@@ -115,7 +115,7 @@ In Topology 2, see {{Fig-Topo2}}, the ZE device communicates bidirectionally wit
 {: #Fig-Topo2 title='Topology 2. The base station (BS) and ZE device communicate through an intermediary node (IN).'}
 
 ### Topology 3
-In Topology 3, see {{Fig-Topo3D}} and {{Fig-Topo3U}}, the ZE device transmits data/signaling to a BS, and receives data/signaling from the assisting node (AN). Alternatively, the ZE device receives data/signaling from a BS and transmits data/signaling to the AN. In this topology, the AN can be a ZE-enabled relay, for example, another UE.
+In Topology 3, see {{Fig-Topo3D}} and {{Fig-Topo3U}}, the ZE device transmits data/signalling to a BS, and receives data/signalling from the assisting node (AN). Alternatively, the ZE device receives data/signaling from a BS and transmits data/signaling to the AN. In this topology, the AN can be a ZE-enabled relay, for example, another UE.
 
 
 ~~~~~~
@@ -175,11 +175,11 @@ The need to reduce overhead and optimize the number of bits over the air to redu
 
 The network is capable of managing the possibility that a full object might not be received soon after a transmission is started. This increases the requirement of how long the fragments and packet might need to be kept in buffers, so it is avoided to lose the energy that the devices have used in the initial transmission(s). This enables that the device can continue with the rest of the packets once the power for a new transmission has been harvested. Of course, the buffers should be stored as long as it makes sense for the use case of the device, and therefore it might require certain degree of configuration, in some cases at the devices and in others at the network, or both.
 
-The possibility of collisions between transmissions and the lack of power control and link adaptation may affect the reliability of the delivery of packets. But still, the restriction of power for transmitting and reception and the delays make challenging the support for reliability based on retransmissions. In this respect, we could think that there is a tradeoff between the reliability and additional delay in receiving the data. In some scenarios, these delays could make sense and in others, the delay could make the packets irrelevant to their use case. In that sense equally to the previous point, the configuration of the delays targeting for reliability is important.
+The possibility of collisions between transmissions and the lack of power control and link adaptation may affect the reliability of the delivery of packets. But still, the restriction of power for transmitting and reception and the delays make challenging the support for reliability based on retransmissions. In this respect, we could think that there is a trade-off between the reliability and additional delay in receiving the data. In some scenarios, these delays could make sense and in others, the delay could make the packets irrelevant to their use case. In that sense equally to the previous point, the configuration of the delays targeting for reliability is important.
 
-From the required characteristics outlined for the user plane, the use of SCHC becomes relevant to fulfill them. SCHC offers fragmented packet corruption detection, and delivery reliability window-based mechanisms, such as ACK-always (Each fragment delivery is explicitly acknowledged) and ACK-on Error (only detected losses trigger delivery reports outlining the fragment loss).  
+From the required characteristics outlined for the user plane, the use of SCHC becomes relevant to fulfill them. SCHC offers fragmented packet corruption detection, and delivery reliability window-based mechanisms, such as ACK-always (Each fragment delivery is explicitly acknowledged) and ACK-on Error (only detected losses trigger delivery reports outlining the fragment loss).
 
-The requirements can be addressed with some additional complements to support the deployment of SCHC into the cellular Zero Energy device scenarios. For example, adding support for object transport in contrast to only IP packet support, and providing better management of long delays. In addition, a solution to enable the setup of the contexts and rules that make sure there is alignment between the network and the devices on the management of packets. Part of this can be accomplished by imagining that a complete object fits an imaginary jumbo IP package and SCHC would then fragment such packet into pieces that can be fitted in the radio transport block.
+The requirements can be addressed with some additional complements to support the deployment of SCHC into the cellular Zero Energy device scenarios. For example, adding support for object transport in contrast to only IP packet support, and providing better management of long delays. In addition, a solution to enable the set up of the contexts and rules that make sure there is alignment between the network and the devices on the management of packets. Part of this can be accomplished by imagining that a complete object fits an imaginary jumbo IP package and SCHC would then fragment such packet into pieces that can be fitted in the radio transport block.
 
 In this way, a great part of the overhead is removed and the SCHC services would take care of the reliability and delay-friendly transmission of packets. In addition, there is the possibility of integrating even further SCHC to the cellular lower protocol layers, for example by not relying on feedback from MAC for the reliability of transmission of packets but instead using the fragment bitmap from SCHC. This also may improve the power efficiency of each transmission since the device does not need to monitor the feedback channel after each transmission.
 
@@ -193,29 +193,26 @@ The traffic characteristics of ZE devices and their use case might drive the dev
 
 One option is that such a platform is provided by operators. In that case, it makes sense to incorporate SCHC as part of the protocol stack between the network and the terminal. This option would require some knowledge of the application protocol stack by the mobile network so that effective compression can be realized. This type of deployment would maximize the energy efficiency by optimizing the compression up to the transport block level reducing additional overhead from padding and lower layers headers. In this scenario the application would only receive the payload whenever a packet or an object is fully assembled, reducing the need for additional implementation to application logic. When transmitting a complete object in full, SCHC could be utilized in a similar way to a transport protocol due to its fragmentation features. They enable transmissions over long periods of time and reconstruct the full object after receiving all fragments and also provide some reliability control on the fragments transmitted.
 
-
-```     |                                                                     
- \   | //       ┌───────SCHC──┐----> (( ▲ ))                               
- \\  ▲          │Payload      │         X                                  
- --▼▼▼▼▼ --     │  *          │         X   (Mobile network)               
--- ▼▼▼▼▼--      │  *          │        xXx                                 
-  /  ▼ \\       │  ****Payload│       XX|XX                                
- //     \       ┴─────────────┘         |                                  
-     /=========/      ▲    ▲            |                Applications &    
-(Solar)========/      │    │            ▼                application server
-     |─────────|      │    │       .-,(  ),-.   APIs       ____   __        
-       └----┘    ─────┘    │    .-(          )-@◄─-----►  |    | |==|       
-        \\//               │   (  Op. Platform  )         |____| |  |       
-         \/   ZE devices   │    '-(          ).-@◄─----►  /::::/ |__|       
-        [__]               │        '-.( ).-' IP tunneling                 
-        /::/ ┌──┐---┌──┐   │                                               
-             │ |└┬─┬┘| │   │                                               
-     (Movement)| │@│ |     │                                               
-               | └─┘ | ────┘                                               
-               └-----┘                                                     
-                                                                           
-                                                                           
-```
+~~~~~~                                                                         
+ \   |  /       ┌───────SCHC──┐----► (( ▲ ))                      
+  \  ▲ /        │Payload      │         X
+ --▼▼▼▼▼ --     │  *          │         X   (Mobile network)
+-- ▼▼▼▼▼--      │  *          │        xXx    
+  /  ▼ \        │  ****Payload│       XX|XX 
+ //     \       ┴─────────────┘         |    
+     /=========/      ▲    ▲            |            Applications and
+(Solar)========/      │    │            ▼            application server
+     |─────────|      │    │       .-,(  ),-.   APIs       ____   __ 
+       └----┘    ─────┘    │    .-(          )-@◄─-----►  |    | |==|
+        \\//               │   (  Op. Platform )          |____| |  |
+         \/   ZE devices   │    '-(          ).-@◄─----►  /::::/ |__|
+        [__]               │        '-.( ).-' IP tunneling     
+        /::/ ┌──┐---┌──┐   │                               
+             │ |└┬─┬┘| │   │                                
+     (Movement)| │@│ |     │                                 
+               | └─┘ | ────┘                                     
+               └-----┘                                                 
+~~~~~~                                                                      
 {: #Fig-patf title='Platform exposing the ZE devices data'}
 
 
@@ -223,35 +220,36 @@ This means that the device has to be onboarded in the platform with a unique ide
 
 The applications requires support to notifications of data avaible in similar fashion to a pub-sub system. In this way the application can request the information from the corresponding API. In the case of a IP tunnel, since the connection may not be up during the whole time, it would require to forward the object to an specific location that the application can fetch the tranmitted object.
 
+
 Another option is the enabling of configurable data collection platforms, which would imply providing SCHC support over the top in the application layer. For this option, the SCHC packets would look like non-IP traffic for the network, and the reliability of the packets, delay management, and reassembling of fragments need to be handled by the application. Therefore, the delays in transmissions and changes in network connection points need to be handled and accounted for.
 
 
 ## SCHC as a size and delay-optimized transmission mechanism
 
-SCHC mechanisms can be used to provide reliability and segmentation and then extended to provide delay-tolerant transmissions of large objects. This can be done by using the SCHC Fragmentation/Reassembly mechanism Ack on Error {{RFC8724}} which divides the object into smaller chunks called tiles that are transmitted according to a network's scheduled occasions considering the device power saving and state configuration. The configuration and setup of SCHC object transfer session considering the network and terminal states according to the needs of each ZE device matching to their use case becomes a critical functionality to address. For this case SCHC would become a simple transport protocol for the whole object instead of only fragmenting IP packets which is different to what it has been specified by RFC [[RFC 8724](https://datatracker.ietf.org/doc/html/rfc8724)].
+SCHC mechanisms can be used to provide reliability and segmentation and then extended to provide delay-tolerant transmissions of large objects. This can be done by using the SCHC Fragmentation/Reassembly mechanism Ack on Error {{RFC8724}} which divides the object into smaller chunks called tiles that are transmitted according to a network's scheduled occasions considering the device power saving and state configuration. The configuration and setup of SCHC object transfer session considering the network and terminal states according to the needs of each ZE device matching to their use case becomes a critical functionality to address. [new text]For this case SCHC would become a simple transport protocol for the whole object instead of only fragmenting IP packets which is different to what it has been specified by RFC [[RFC 8724](https://datatracker.ietf.org/doc/html/rfc8724)].
 
-```
-                        Packet transfer                                         
-                            interval                                            
-                                                        Inactivity              
-          ┌──┐           │      │     │                 Timers                  
-         /│x │Tile       │◄────►│◄───►│                   ────                  
-         /└──┘    │      │      │     │                   \x /                  
-  ┌──┬──┐////     ├──────┼──────┼─────┼──────────────┬─►  /xx\                  
-  │  │  │         │      │      │     │              │    ────                  
-  ├──┼──┼──┐      │  ┌──┐  ┌──┐  ┌──┐   ┌──┐   ┌──┐  │                          
-  │  │  │  │      │  │x │  │x │  │x │   │x │   │x │  │                          
-  ├──┼──┼──┤      │  └──┘  └──┘  └──┘   └──┘   └──┘  │                          
-  │  │  │  │ │    │                                  │               ────       
-│ └──┴──┴──┘ │    └──────────────────────────────────┘       ┌─┐     \x /       
-│            │              Windows size                     │‡│     /xx\       
-└─────┬──────┘                                               └┬┘     ────       
-      │                                                       │  Retrasmission  
- Tranmission     ◄────────────────────────────────────────────┼──  Timers       
-  Object                                                    ◄─┘                 
- ```                                                                               
+~~~~~~
+                        Packet transfer
+                            interval 
+                                                        Inactivity 
+          ┌──┐           │      │     │                 Timers
+         /│x │Tile       │◄────►│◄───►│                   ──── 
+         /└──┘    │      │      │     │                   \x / 
+  ┌──┬──┐////     ├──────┼──────┼─────┼──────────────┬─►  /xx\ 
+  │  │  │         │      │      │     │              │    ──── 
+  ├──┼──┼──┐      │  ┌──┐  ┌──┐  ┌──┐   ┌──┐   ┌──┐  │       
+  │  │  │  │      │  │x │  │x │  │x │   │x │   │x │  │ 
+  ├──┼──┼──┤      │  └──┘  └──┘  └──┘   └──┘   └──┘  │  
+  │  │  │  │ │    │                                  │       ──── 
+│ └──┴──┴──┘ │    └──────────────────────────────────┘ ┌─┐   \x /
+│            │              Windows size               │‡│   /xx\ 
+└─────┬──────┘                                         └┬┘   ──── 
+      │                                                 │ Retrasmission
+ Tranmission     ◄──────────────────────────────────────┼──  Timers
+  Object                                              ◄─┘
+~~~~~~                                                                             
 {: #Fig-fragm title='Object Fragmentation utilizing SCHC fragmentation'}
-                                         
+                                                                                
 
 ### General architecture
 
@@ -355,14 +353,13 @@ The compressor must now inspect the payload looking for the field `bn` of the fi
 This type of payload compression is devised specifically for key-value based formats, such as JSON. However, other types of formats may be supported as long as the compressor implements the logic to parse the semantics behind the FID.
 
 ### Fragmentation parameters
-Due to the different types of devices and their energy harvesting capabilities, the actual parameters to fragment the objects have to consider these differences. As it is difficult to reconfigure this devices because energy is needed for additional processing and receiving data, the best approach is to create some profiles that match the different types of devices. The profiles could depend on the size of packets that the device could manage as well as the expected time that the device might need to collect to send such packet.
-
+Due to the different types of devices and their energy harvesting capabilities, the actual parameters to fragment the objects have to consider this differences. As it is difficult to reconfigure this devices because energy is needed for additional processing and receiving data, the best approach is to create some profiles that match the different types of devices. The profiles could depend on the size of packets that the device could manage as well as the expected time that the device might need to collect to send such packet.
 One proposal is to have 4 categories of time-based profiles:
 
-* **Latency mapping hours.** The devices that maps to this kind of profile would have a source of energy that can recharge the device at least once per hour. Therefore the retransmission timers can be set to a maximum of 6 hours, for example, and inactivity timers that may last 3 to 4 hours. 
-* **Latency mapping a day**. The devices may require a full day to recharge for sending a packet. Therefore the retransmission timer may take 4 or 7 days and a inactivity timer of 2 or 3 days.
-* **Latency mapping a week**. In this case very infrequently packets are send and therefore it is not expected that a lot of data would be transmitted at once. Therefore retransmission timer and inactivity timer would be quite close to the transmission time. Could be 2 weeks for inactivity timer and 3 weeks for retransmission timer.
-* **Latency mapping a month.** Similarly to the previous case, the values should also map close to transmission expectation. 2 months for inactivity timer and 3 months for retransmission timer.
+* Latency mapping hours. The devices that maps to this kind of profile would have a source of energy that can recharge the device at least once per hour. Therefore the retransmission timers can be set to a maximum of 6 hours, for example, and inactivity timers that may last 3 to 4 hours. 
+* Latency mapping a day. The devices may require a full day to recharge for sending a packet. Therefore the retransmission timer may take 4 or 7 days and a inactivity timer of 2 or 3 days.
+* Latency mapping a week. In this case very infrequently packets are send and therefore it is not expected that a lot of data would be transmitted at once. Therefore retransmission timer and inactivity timer would be quite close to the transmission time. Could be 2 weeks for inactivity timer and 3 weeks for retransmission timer.
+* Latency mapping a month. Similarly to the previous case, the values should also map close to transmission expectation. 2 months for inactivity timer and 3 months for retransmission timer.
 
 Profiles related to packet sizes:
 * Single value packet
